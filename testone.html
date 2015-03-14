@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<style>
+@keyframes myfirst
+{
+0%   {background:url(aa/hearts_8_1.png); left:0px; top:0px;}
+25%  {background-image: url(aa/hearts_8_1.png); left:200px; top:0px;}
+50%  {background-image: url(aa/hearts_8_1.png); left:200px; top:200px;}
+75%  {background-image: url(aa/hearts_8_1.png); left:0px; top:200px;}
+100% {background-image: url(aa/hearts_8_1.png); left:0px; top:0px;}
+}
+.moveimg{
+    animation: myfirst 10s;
+}
+</style>
+<html>
+<body>
+<div style="width:200px;height:200px;" class="moveimg"></div>
+<canvas id="myCanvas" width="640" height="960" style="border:1px solid #d3d3d3;background-image:url(hearts_8_1.png);background-repeat:no-repeat;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+;(function(){
+  var col=0; //控制动画
+  
+  var x=178;
+  var y=30;
+  var r=30;
+  var s=0.5;
+  var cl="green";
+  var w=1.5;
+  var e=2.5;  //画圆终止参数
+  
+  var xs=178;
+  var ys=60;
+  var xe=178;
+  var ye=170;
+  var xstep=0;
+  var ystep=5;
+  var sym=1;  //1:+; 0:-
+  
+  var c=document.getElementById("myCanvas");
+  var ctx=c.getContext("2d");
+  var timeid,timeline;
+  function init(){
+    timeid = setInterval(drawcircle,100);
+  }
+  
+/*
+x:圆心的x轴
+y:圆心的y轴
+r:半径
+s:开始点：0，0.5，1，1.5，2
+e:结束点：+2
+cl:边线的颜色
+w:边线的宽度
+return:s+e,当s+e>=s+2时画的是整个圆
+*/
+function drawcircle(){
+    ctx.beginPath();
+    //false 表示顺时针
+    ctx.arc(x,y,r,s*Math.PI,(s+0.1)*Math.PI,false);
+    ctx.strokeStyle=cl;
+    ctx.lineWidth=w;
+    ctx.stroke();
+    s=s+0.1;
+    console.log(s);
+    if(s>=e){
+        clearInterval(timeid);
+        
+        switch(col){
+            case 0:
+              col++;
+              timeline = setInterval(drawline,100);
+              break;
+            case 2:
+                xs=168; ys=228; xe=63;
+                ye=283; xstep=5; ystep=2.7;sym=0;
+                col++;
+                timeline = setInterval(drawline,100);
+              break;
+            case 4:
+            /*
+                xs=168; ys=228; xe=63;
+                ye=283; xstep=5; ystep=2.7;sym=0;
+                col++;
+                timeline = setInterval(drawline,100);
+                */
+                    ctx.beginPath();
+                    ctx.moveTo(32,318);
+                    ctx.lineTo(32,425);
+                    ctx.strokeStyle=cl;
+                    ctx.lineWidth=w;
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.arc(32,455,30,0*Math.PI,2*Math.PI,false);
+                    ctx.strokeStyle=cl;
+                    ctx.lineWidth=w;
+                    ctx.stroke();
+              break;
+            default:
+        }
+    }
+}
+
+/*
+xs:起始点x轴
+ys:起始点y轴
+xe:终止点x轴
+ye:终止点y轴
+cl:边线的颜色
+w:边线的宽度
+step:增加步长
+*/
+function drawline(){
+    ctx.beginPath();
+    ctx.moveTo(xs,ys);
+    ctx.lineTo(xs-xstep,ys+ystep);
+    ctx.strokeStyle=cl;
+    ctx.lineWidth=w;
+    ctx.stroke();
+
+    if(sym){
+        ys=ys+ystep;
+        xs=xs+xstep;
+    }else{
+        xs=xs-xstep;
+        ys=ys+ystep;
+    }
+    console.log(xs+"-----"+ys);
+    if(ys>=ye){
+        clearInterval(timeline);       
+        switch(col){
+            case 1:
+                y=200;
+                s=1.5;
+                e=4;
+                col++;
+                timeid = setInterval(drawcircle,100);
+              break;
+            case 3:
+                x=32;
+                y=287;
+                s=0;
+                e=2;
+                col++;
+                timeid = setInterval(drawcircle,100);
+              break;
+            default:
+        }
+    }
+}
+
+  init();
+
+})();
+</script>
+</body>
+</html>
